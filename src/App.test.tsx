@@ -19,6 +19,15 @@ describe("タイトル画面", () => {
     expect(screen.getByText("密書の夜会")).toBeVisible();
     expect(screen.getByRole("button", { name: "夜会へ入る" })).toBeVisible();
   });
+
+  it("効果音のミュート設定を端末へ保存する", () => {
+    render(<App random={() => 0} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "効果音をミュート" }));
+
+    expect(screen.getByRole("button", { name: "効果音を有効にする" })).toBeVisible();
+    expect(localStorage.getItem("midnight-masquerade.sound-muted")).toBe("true");
+  });
 });
 
 describe("一台受け渡しの開始フロー", () => {

@@ -19,7 +19,7 @@ export function HandoffScreen({
         alt=""
         aria-hidden="true"
         className="handoff-screen__letter"
-        loading="lazy"
+        loading="eager"
         src={`${assetBase}/handoff-sealed-letter.webp`}
       />
       <section className="handoff-panel" aria-label="端末の受け渡し">

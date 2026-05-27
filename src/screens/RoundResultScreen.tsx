@@ -51,7 +51,7 @@ export function RoundResultScreen({
         alt=""
         aria-hidden="true"
         className="scene-backdrop"
-        loading="lazy"
+        loading="eager"
         src={`${assetBase}/victory-ballroom.webp`}
       />
       <div className="scene-veil" aria-hidden="true" />

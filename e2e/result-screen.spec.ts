@@ -45,6 +45,14 @@ for (const viewport of mobileViewports) {
     await expect(page.getByRole("heading", { name: "ラウンドの結末" })).toBeVisible();
     await expect(page.getByText("葵の勝利")).toBeVisible();
     await expect(page.getByText("あなたの手札")).toHaveCount(0);
+    const resultImage = page.locator(".result-screen img");
+    await expect
+      .poll(() =>
+        resultImage.evaluate(
+          (image: HTMLImageElement) => image.complete && image.naturalWidth > 0,
+        ),
+      )
+      .toBe(true);
     const resultBounds = await page.evaluate(() => {
       const button = document.querySelector(".result-panel button");
       const bounds = button?.getBoundingClientRect();

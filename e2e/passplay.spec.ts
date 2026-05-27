@@ -29,6 +29,14 @@ for (const viewport of mobileViewports) {
 
     await expect(page.getByRole("region", { name: "端末の受け渡し" })).toBeVisible();
     await expect(page.getByText("あなたの手札")).toHaveCount(0);
+    const handoffImage = page.locator(".handoff-screen__letter");
+    await expect
+      .poll(() =>
+        handoffImage.evaluate(
+          (image: HTMLImageElement) => image.complete && image.naturalWidth > 0,
+        ),
+      )
+      .toBe(true);
     const handoffBounds = await page.evaluate(() => {
         const button = document.querySelector(".handoff-panel button");
         const bounds = button?.getBoundingClientRect();
@@ -43,6 +51,10 @@ for (const viewport of mobileViewports) {
     expect(handoffBounds.bottomMargin).toBeGreaterThanOrEqual(24);
     expect(handoffBounds.overflowsHorizontally).toBe(false);
     expect(handoffBounds.overflowsVertically).toBe(false);
+    await page.screenshot({
+      fullPage: true,
+      path: `test-results/handoff-with-sound-${viewport.width}x${viewport.height}.png`,
+    });
 
     await page.getByRole("button", { name: "密書を開封する" }).click();
 

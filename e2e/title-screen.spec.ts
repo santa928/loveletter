@@ -24,6 +24,7 @@ for (const viewport of mobileViewports) {
       page.getByRole("heading", { name: "Midnight Masquerade" }),
     ).toBeVisible();
     await expect(page.getByRole("button", { name: "夜会へ入る" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "効果音をミュート" })).toBeVisible();
 
     const backdrop = page.locator(".title-screen__backdrop");
     await expect(backdrop).toBeVisible();
@@ -41,6 +42,21 @@ for (const viewport of mobileViewports) {
         vertical: document.documentElement.scrollHeight > window.innerHeight,
       })),
     ).toEqual({ horizontal: false, vertical: false });
+    const soundBounds = await page.evaluate(() => {
+      const toggle = document.querySelector(".sound-toggle");
+      const bounds = toggle?.getBoundingClientRect();
+
+      return {
+        rightMargin: bounds ? window.innerWidth - bounds.right : -1,
+        topMargin: bounds?.top ?? -1,
+      };
+    });
+    expect(soundBounds.rightMargin).toBeGreaterThanOrEqual(10);
+    expect(soundBounds.topMargin).toBeGreaterThanOrEqual(10);
     expect(consoleProblems).toEqual([]);
+    await page.screenshot({
+      fullPage: true,
+      path: `test-results/title-with-sound-${viewport.width}x${viewport.height}.png`,
+    });
   });
 }

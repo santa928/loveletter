@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
+import { useCeremonyAudio } from "./app/useCeremonyAudio";
 import { useGameSession } from "./app/useGameSession";
 import { HandoffScreen } from "./screens/HandoffScreen";
 import { PrivateRevealScreen } from "./screens/PrivateRevealScreen";
 import { RoundResultScreen } from "./screens/RoundResultScreen";
 import { SetupScreen } from "./screens/SetupScreen";
+import { SoundToggle } from "./screens/SoundToggle";
 import { TitleScreen } from "./screens/TitleScreen";
 import { TurnScreen } from "./screens/TurnScreen";
 import type { GameState } from "./game/types";
@@ -17,18 +19,57 @@ interface AppProps {
   random?: () => number;
 }
 
+interface AppSurfaceProps {
+  children: ReactNode;
+  muted: boolean;
+  onToggleSound(): void;
+}
+
+/**
+ * Adds the table-wide audio control above any active ceremony screen.
+ */
+function AppSurface({
+  children,
+  muted,
+  onToggleSound,
+}: AppSurfaceProps) {
+  return (
+    <>
+      <SoundToggle muted={muted} onToggle={onToggleSound} />
+      {children}
+    </>
+  );
+}
+
 /**
  * Routes entry and pass-play screens while keeping secret state behind views.
  */
 export default function App({ initialState, random }: AppProps = {}) {
   const [entryScreen, setEntryScreen] = useState<"title" | "setup">("title");
+  const audio = useCeremonyAudio();
   const session = useGameSession(initialState, random);
 
   if (!session.state) {
-    return entryScreen === "title" ? (
-      <TitleScreen assetBase={assetBase} onEnter={() => setEntryScreen("setup")} />
-    ) : (
-      <SetupScreen assetBase={assetBase} onStart={session.start} />
+    return (
+      <AppSurface muted={audio.muted} onToggleSound={audio.toggleMuted}>
+        {entryScreen === "title" ? (
+          <TitleScreen
+            assetBase={assetBase}
+            onEnter={() => {
+              audio.play("enter");
+              setEntryScreen("setup");
+            }}
+          />
+        ) : (
+          <SetupScreen
+            assetBase={assetBase}
+            onStart={(config) => {
+              audio.play("seal");
+              session.start(config);
+            }}
+          />
+        )}
+      </AppSurface>
     );
   }
 
@@ -46,24 +87,37 @@ export default function App({ initialState, random }: AppProps = {}) {
 
   if (session.state.phase === "handoff") {
     return (
-      <HandoffScreen
-        assetBase={assetBase}
-        onOpen={session.openHandoff}
-        playerName={activePlayer.name}
-      />
+      <AppSurface muted={audio.muted} onToggleSound={audio.toggleMuted}>
+        <HandoffScreen
+          assetBase={assetBase}
+          onOpen={() => {
+            audio.play("seal");
+            session.openHandoff();
+          }}
+          playerName={activePlayer.name}
+        />
+      </AppSurface>
     );
   }
 
   if (session.state.phase === "turn") {
     return (
-      <TurnScreen
-        assetBase={assetBase}
-        hand={session.privateView?.hand ?? []}
-        onDraw={session.drawCard}
-        onPlay={session.playCard}
-        playerName={activePlayer.name}
-        publicView={session.publicView}
-      />
+      <AppSurface muted={audio.muted} onToggleSound={audio.toggleMuted}>
+        <TurnScreen
+          assetBase={assetBase}
+          hand={session.privateView?.hand ?? []}
+          onDraw={() => {
+            audio.play("draw");
+            session.drawCard();
+          }}
+          onPlay={(choice) => {
+            audio.play("play");
+            session.playCard(choice);
+          }}
+          playerName={activePlayer.name}
+          publicView={session.publicView}
+        />
+      </AppSurface>
     );
   }
 
@@ -76,12 +130,17 @@ export default function App({ initialState, random }: AppProps = {}) {
     }
 
     return (
-      <PrivateRevealScreen
-        assetBase={assetBase}
-        card={revealedCard}
-        onClose={session.closePrivateReveal}
-        reason={reason}
-      />
+      <AppSurface muted={audio.muted} onToggleSound={audio.toggleMuted}>
+        <PrivateRevealScreen
+          assetBase={assetBase}
+          card={revealedCard}
+          onClose={() => {
+            audio.play("reveal");
+            session.closePrivateReveal();
+          }}
+          reason={reason}
+        />
+      </AppSurface>
     );
   }
 
@@ -91,18 +150,24 @@ export default function App({ initialState, random }: AppProps = {}) {
     session.publicView.roundOutcome
   ) {
     return (
-      <RoundResultScreen
-        assetBase={assetBase}
-        matchMode={session.publicView.matchMode}
-        onContinue={session.continueMatch}
-        onReset={() => {
-          session.reset();
-          setEntryScreen("setup");
-        }}
-        outcome={session.publicView.roundOutcome}
-        phase={session.state.phase}
-        players={session.publicView.players}
-      />
+      <AppSurface muted={audio.muted} onToggleSound={audio.toggleMuted}>
+        <RoundResultScreen
+          assetBase={assetBase}
+          matchMode={session.publicView.matchMode}
+          onContinue={() => {
+            audio.play("enter");
+            session.continueMatch();
+          }}
+          onReset={() => {
+            audio.play("enter");
+            session.reset();
+            setEntryScreen("setup");
+          }}
+          outcome={session.publicView.roundOutcome}
+          phase={session.state.phase}
+          players={session.publicView.players}
+        />
+      </AppSurface>
     );
   }
 
