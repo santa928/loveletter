@@ -63,8 +63,8 @@ const CARD_DEFINITIONS: readonly CardDefinition[] = [
  * Creates a fresh sixteen-card deck using the masquerade's original role names.
  */
 export function createDeck(): Card[] {
-  return CARD_DEFINITIONS.flatMap((definition) =>
-    Array.from({ length: definition.count }, (_, copyIndex) => ({
+  return CARD_DEFINITIONS.flatMap(({ count, ...definition }) =>
+    Array.from({ length: count }, (_, copyIndex) => ({
       ...definition,
       id: `rank-${definition.rank}-${copyIndex + 1}`,
     })),

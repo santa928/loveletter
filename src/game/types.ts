@@ -12,7 +12,6 @@ export interface Card {
   id: string;
   rank: Rank;
   name: string;
-  count: number;
   summary: string;
 }
 

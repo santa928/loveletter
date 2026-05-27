@@ -12,6 +12,7 @@ describe("ラウンド準備", () => {
 
     expect(cards).toHaveLength(16);
     expect(new Set(cards.map((card) => card.id)).size).toBe(16);
+    expect(cards.some((card) => "count" in card)).toBe(false);
     expect(rankCounts).toEqual({
       1: 5,
       2: 2,
@@ -61,9 +62,27 @@ describe("ラウンド準備", () => {
       true,
     );
     expect(state.deck).toHaveLength(10);
+    const allCards = [
+      state.hiddenRemoved,
+      ...state.faceUpRemoved,
+      ...state.players.flatMap((player) => player.hand),
+      ...state.deck,
+    ];
+    expect(allCards).toHaveLength(16);
+    expect(new Set(allCards.map((card) => card.id)).size).toBe(16);
   });
 
-  it("3人以上では公開除外札を作らず、開始者を生存者から選ぶ", () => {
+  it("3人ちょうどでは公開除外札を作らない", () => {
+    const state = startRound(
+      { names: ["葵", "優斗", "凛"], matchMode: "single" },
+      () => 0,
+    );
+
+    expect(state.faceUpRemoved).toHaveLength(0);
+    expect(state.deck).toHaveLength(12);
+  });
+
+  it("4人戦では公開除外札を作らず、開始者を生存者から選ぶ", () => {
     const state = startRound(
       { names: ["葵", "優斗", "凛", "真琴"], matchMode: "first-to-three" },
       () => 0,
@@ -74,5 +93,14 @@ describe("ラウンド準備", () => {
     expect(state.players.map((player) => player.id)).toContain(
       state.activePlayerId,
     );
+  });
+
+  it("抽選源が範囲外の値を返した場合は開始しない", () => {
+    expect(() =>
+      startRound({ names: ["葵", "優斗"], matchMode: "single" }, () => 1),
+    ).toThrow("乱数は0以上1未満");
+    expect(() =>
+      startRound({ names: ["葵", "優斗"], matchMode: "single" }, () => NaN),
+    ).toThrow("乱数は0以上1未満");
   });
 });
