@@ -1,13 +1,7 @@
 /** Round settlement and match scoring for the offline masquerade game. */
-import type { GameState, PlayerState } from "./types";
+import type { GameState, PlayerState, RoundOutcome } from "./types";
 
-export interface RoundResult {
-  winners: string[];
-  reason: "last-standing" | "deck-empty";
-  scoresAwarded: Record<string, number>;
-  nextStarterId: string;
-  matchWinnerIds: string[];
-}
+export type RoundResult = RoundOutcome;
 
 /**
  * Returns the remaining held rank used to judge a deck-empty round.
@@ -103,5 +97,11 @@ export function applyRoundResult(
     faceUpRemoved: [...state.faceUpRemoved],
     publicLog: [...state.publicLog],
     privateReveal: state.privateReveal ? { ...state.privateReveal } : null,
+    roundOutcome: {
+      ...result,
+      winners: [...result.winners],
+      scoresAwarded: { ...result.scoresAwarded },
+      matchWinnerIds: [...result.matchWinnerIds],
+    },
   };
 }

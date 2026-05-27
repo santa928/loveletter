@@ -43,6 +43,14 @@ export interface PrivateReveal {
   reason: "informant" | "exchange" | "redraw";
 }
 
+export interface RoundOutcome {
+  winners: string[];
+  reason: "last-standing" | "deck-empty";
+  scoresAwarded: Record<string, number>;
+  nextStarterId: string;
+  matchWinnerIds: string[];
+}
+
 export interface GameState {
   phase: GamePhase;
   players: PlayerState[];
@@ -54,4 +62,5 @@ export interface GameState {
   matchMode: MatchMode;
   publicLog: PublicLogEntry[];
   privateReveal: PrivateReveal | null;
+  roundOutcome: RoundOutcome | null;
 }

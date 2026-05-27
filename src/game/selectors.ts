@@ -1,5 +1,12 @@
 /** Read-only projections that prevent secret round data from reaching screens. */
-import type { Card, GamePhase, GameState, MatchMode, Rank } from "./types";
+import type {
+  Card,
+  GamePhase,
+  GameState,
+  MatchMode,
+  Rank,
+  RoundOutcome,
+} from "./types";
 
 export interface PublicPlayerView {
   id: string;
@@ -19,6 +26,7 @@ export interface PublicGameView {
   turnNumber: number;
   matchMode: MatchMode;
   log: Array<{ id: string; message: string; actorId: string; cardRank: Rank }>;
+  roundOutcome: RoundOutcome | null;
 }
 
 export interface PrivateGameView {
@@ -46,6 +54,7 @@ export function selectPublicView(state: GameState): PublicGameView {
     turnNumber: state.turnNumber,
     matchMode: state.matchMode,
     log: state.publicLog,
+    roundOutcome: state.roundOutcome,
   };
 }
 

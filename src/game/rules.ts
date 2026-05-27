@@ -246,6 +246,13 @@ export function resolvePlay(state: GameState, choice: PlayChoice): GameState {
         next.hiddenRemoved = null;
       }
       target.hand.push(replacement);
+      if (target.id === actor.id) {
+        next.privateReveal = {
+          viewerId: actor.id,
+          card: replacement,
+          reason: "redraw",
+        };
+      }
       appendLog(next, actor.id, playedCard.rank, `${target.name}の預け先が交代した。`);
       return next;
     }
@@ -258,6 +265,15 @@ export function resolvePlay(state: GameState, choice: PlayChoice): GameState {
         return next;
       }
       [actor.hand, target.hand] = [target.hand, actor.hand];
+      const receivedCard = actor.hand[0];
+      if (!receivedCard) {
+        throw new Error("交換後の預け先を確認できません");
+      }
+      next.privateReveal = {
+        viewerId: actor.id,
+        card: receivedCard,
+        reason: "exchange",
+      };
       appendLog(next, actor.id, playedCard.rank, "交換商が密書の預け先を入れ替えた。");
       return next;
     }

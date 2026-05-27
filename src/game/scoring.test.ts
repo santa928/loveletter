@@ -79,5 +79,6 @@ describe("ラウンド決着と連戦得点", () => {
     expect(next.players[1].score).toBe(3);
     expect(next.activePlayerId).toBe("p2");
     expect(next.phase).toBe("match-result");
+    expect(next.roundOutcome?.matchWinnerIds).toEqual(["p2"]);
   });
 });

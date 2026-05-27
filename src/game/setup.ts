@@ -102,5 +102,6 @@ export function startRound(
     matchMode: config.matchMode,
     publicLog: [],
     privateReveal: null,
+    roundOutcome: null,
   };
 }

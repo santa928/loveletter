@@ -17,6 +17,9 @@ for (const viewport of mobileViewports) {
       }
     });
 
+    await page.addInitScript(() => {
+      Math.random = () => 0;
+    });
     await page.setViewportSize(viewport);
     await page.goto(`/loveletter/?e2e=passplay-${viewport.width}`);
     await page.getByRole("button", { name: "夜会へ入る" }).click();
@@ -46,11 +49,13 @@ for (const viewport of mobileViewports) {
     await expect(page.getByText("あなたの手札")).toBeVisible();
     const roleImage = page.locator(".role-card img");
     await expect(roleImage).toBeVisible();
-    expect(
-      await roleImage.evaluate(
-        (image: HTMLImageElement) => image.complete && image.naturalWidth > 0,
-      ),
-    ).toBe(true);
+    await expect
+      .poll(() =>
+        roleImage.evaluate(
+          (image: HTMLImageElement) => image.complete && image.naturalWidth > 0,
+        ),
+      )
+      .toBe(true);
     const cardBounds = await page.evaluate(() => {
         const bounds = document.querySelector(".role-card")?.getBoundingClientRect();
         return {
@@ -63,6 +68,36 @@ for (const viewport of mobileViewports) {
     expect(cardBounds.leftMargin).toBeGreaterThanOrEqual(20);
     expect(cardBounds.rightMargin).toBeGreaterThanOrEqual(20);
     expect(cardBounds.overflowsHorizontally).toBe(false);
+
+    await page.getByRole("button", { name: "密書を一枚引く" }).click();
+
+    await expect(page.locator(".role-card--choice")).toHaveCount(2);
+    const playChoiceBounds = await page.evaluate(() =>
+      Array.from(document.querySelectorAll(".role-card--choice")).map((card) => {
+        const cardBounds = card.getBoundingClientRect();
+        const actionBounds = card
+          .querySelector("button")
+          ?.getBoundingClientRect();
+
+        return {
+          actionContained:
+            Boolean(actionBounds) &&
+            actionBounds!.bottom <= cardBounds.bottom &&
+            actionBounds!.right <= cardBounds.right,
+          cardRightMargin: window.innerWidth - cardBounds.right,
+          overflowsHorizontally:
+            document.documentElement.scrollWidth > window.innerWidth,
+        };
+      }),
+    );
+    expect(playChoiceBounds).toHaveLength(2);
+    expect(playChoiceBounds.every((bounds) => bounds.actionContained)).toBe(true);
+    expect(
+      playChoiceBounds.every((bounds) => bounds.cardRightMargin >= 20),
+    ).toBe(true);
+    expect(
+      playChoiceBounds.every((bounds) => !bounds.overflowsHorizontally),
+    ).toBe(true);
     expect(consoleProblems).toEqual([]);
   });
 }

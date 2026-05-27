@@ -147,6 +147,11 @@ describe("公式準拠の役職効果", () => {
 
     expect(next.players[0].hand[0].id).toBe("replacement");
     expect(next.hiddenRemoved?.id).toBe("hidden-removed");
+    expect(next.privateReveal).toEqual({
+      viewerId: "p1",
+      card: fixtureCard(4, "replacement"),
+      reason: "redraw",
+    });
   });
 
   it("演出家で夜会の主を手放した対象は退出する", () => {
@@ -173,6 +178,11 @@ describe("公式準拠の役職効果", () => {
 
     expect(next.players[0].hand[0].id).toBe("target-kept");
     expect(next.players[1].hand[0].id).toBe("actor-kept");
+    expect(next.privateReveal).toEqual({
+      viewerId: "p1",
+      card: fixtureCard(7, "target-kept"),
+      reason: "exchange",
+    });
   });
 
   it("夜会の主を使用した本人は直ちに退出する", () => {

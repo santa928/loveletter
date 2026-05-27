@@ -32,6 +32,20 @@ describe("端末内セッション保存", () => {
     expect(loadSession()).toBeNull();
   });
 
+  it("結果フェーズなのに公開結果が欠落した保存値を破棄する", () => {
+    const state = startRound(
+      { names: ["葵", "優斗"], matchMode: "single" },
+      () => 0,
+    );
+    state.phase = "round-result";
+    localStorage.setItem(
+      "midnight-masquerade.session",
+      JSON.stringify(state),
+    );
+
+    expect(loadSession()).toBeNull();
+  });
+
   it("復元不可能な保存値を破棄してnullを返す", () => {
     localStorage.setItem(
       "midnight-masquerade.session",

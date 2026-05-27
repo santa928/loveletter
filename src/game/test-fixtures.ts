@@ -63,5 +63,6 @@ export function ruleState({
     matchMode: "single",
     publicLog: [],
     privateReveal: null,
+    roundOutcome: null,
   };
 }

@@ -27,11 +27,13 @@ for (const viewport of mobileViewports) {
 
     const backdrop = page.locator(".title-screen__backdrop");
     await expect(backdrop).toBeVisible();
-    expect(
-      await backdrop.evaluate(
-        (image: HTMLImageElement) => image.complete && image.naturalWidth > 0,
-      ),
-    ).toBe(true);
+    await expect
+      .poll(() =>
+        backdrop.evaluate(
+          (image: HTMLImageElement) => image.complete && image.naturalWidth > 0,
+        ),
+      )
+      .toBe(true);
 
     expect(
       await page.evaluate(() => ({
