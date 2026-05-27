@@ -27,7 +27,7 @@ export interface PlayerState {
   discards: Card[];
   score: number;
   eliminated: boolean;
-  protectedUntilTurn: number | null;
+  protected: boolean;
 }
 
 export interface PublicLogEntry {
@@ -47,7 +47,7 @@ export interface GameState {
   phase: GamePhase;
   players: PlayerState[];
   deck: Card[];
-  hiddenRemoved: Card;
+  hiddenRemoved: Card | null;
   faceUpRemoved: Card[];
   activePlayerId: string;
   turnNumber: number;

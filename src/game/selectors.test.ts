@@ -11,6 +11,9 @@ describe("秘密保持の投影", () => {
     const publicView = selectPublicView(state);
     const serialized = JSON.stringify(publicView);
 
+    if (!state.hiddenRemoved) {
+      throw new Error("伏せ除外札が作成されていません");
+    }
     expect(publicView.deckCount).toBe(state.deck.length);
     expect(publicView.faceUpRemoved).toEqual([]);
     expect(serialized).not.toContain(state.hiddenRemoved.id);

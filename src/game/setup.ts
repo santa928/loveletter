@@ -55,7 +55,7 @@ function createPlayers(names: readonly string[]): PlayerState[] {
     discards: [],
     score: 0,
     eliminated: false,
-    protectedUntilTurn: null,
+    protected: false,
   }));
 }
 

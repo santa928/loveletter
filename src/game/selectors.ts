@@ -38,9 +38,7 @@ export function selectPublicView(state: GameState): PublicGameView {
       discards: player.discards,
       score: player.score,
       eliminated: player.eliminated,
-      protected:
-        player.protectedUntilTurn !== null &&
-        player.protectedUntilTurn >= state.turnNumber,
+      protected: player.protected,
     })),
     deckCount: state.deck.length,
     faceUpRemoved: state.faceUpRemoved,

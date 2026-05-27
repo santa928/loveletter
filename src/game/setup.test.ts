@@ -56,12 +56,15 @@ describe("ラウンド準備", () => {
       () => 0,
     );
 
-    expect(state.hiddenRemoved).toBeDefined();
+    expect(state.hiddenRemoved).not.toBeNull();
     expect(state.faceUpRemoved).toHaveLength(3);
     expect(state.players.every((player) => player.hand.length === 1)).toBe(
       true,
     );
     expect(state.deck).toHaveLength(10);
+    if (!state.hiddenRemoved) {
+      throw new Error("伏せ除外札が作成されていません");
+    }
     const allCards = [
       state.hiddenRemoved,
       ...state.faceUpRemoved,
