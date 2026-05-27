@@ -34,6 +34,16 @@ export interface PrivateGameView {
   revealedCard: Card | null;
 }
 
+export interface ResultPlayerView extends PublicPlayerView {
+  finalCard: Card | null;
+}
+
+export interface ResultGameView
+  extends Omit<PublicGameView, "players" | "roundOutcome"> {
+  players: ResultPlayerView[];
+  roundOutcome: RoundOutcome;
+}
+
 /**
  * Projects only information that every invitee may see while the phone moves.
  */
@@ -77,5 +87,33 @@ export function selectPrivateView(
       state.privateReveal?.viewerId === viewerId
         ? state.privateReveal.card
         : null,
+  };
+}
+
+/**
+ * Releases final held cards only after the round has become public knowledge.
+ */
+export function selectResultView(state: GameState): ResultGameView {
+  if (
+    (state.phase !== "round-result" && state.phase !== "match-result") ||
+    !state.roundOutcome
+  ) {
+    throw new Error("決着前の密書を結果表示へ公開できません");
+  }
+
+  const publicView = selectPublicView(state);
+
+  return {
+    ...publicView,
+    players: state.players.map((player) => ({
+      id: player.id,
+      name: player.name,
+      discards: player.discards,
+      score: player.score,
+      eliminated: player.eliminated,
+      protected: player.protected,
+      finalCard: player.hand[0] ?? null,
+    })),
+    roundOutcome: state.roundOutcome,
   };
 }

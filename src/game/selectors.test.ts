@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { startRound } from "./setup";
-import { selectPrivateView, selectPublicView } from "./selectors";
+import { applyRoundResult, settleRound } from "./scoring";
+import { selectPrivateView, selectPublicView, selectResultView } from "./selectors";
 
 describe("秘密保持の投影", () => {
   it("公開ビューには山札順序、伏せ札、各自の手札を含めない", () => {
@@ -48,5 +49,23 @@ describe("秘密保持の投影", () => {
       hand: state.players[1].hand,
       revealedCard: null,
     });
+  });
+
+  it("最終保持札はラウンド決着後の結果ビューだけが公開する", () => {
+    const state = startRound(
+      { names: ["葵", "優斗"], matchMode: "single" },
+      () => 0,
+    );
+    const exited = state.players[1];
+
+    expect(() => selectResultView(state)).toThrow("決着");
+    exited.discards.push(...exited.hand);
+    exited.hand = [];
+    exited.eliminated = true;
+    const completed = applyRoundResult(state, settleRound(state));
+
+    expect(selectResultView(completed).players[0].finalCard).toEqual(
+      completed.players[0].hand[0],
+    );
   });
 });

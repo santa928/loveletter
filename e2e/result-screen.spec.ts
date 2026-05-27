@@ -70,6 +70,13 @@ for (const viewport of mobileViewports) {
     expect(resultBounds.overflowsVertically).toBe(false);
     expect(consoleProblems).toEqual([]);
 
+    await expect
+      .poll(() =>
+        page
+          .locator(".result-panel")
+          .evaluate((panel) => getComputedStyle(panel).opacity),
+      )
+      .toBe("1");
     await page.screenshot({
       fullPage: true,
       path: `test-results/result-screen-${viewport.width}x${viewport.height}.png`,

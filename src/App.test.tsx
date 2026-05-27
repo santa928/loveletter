@@ -148,6 +148,10 @@ describe("本人だけが進める手番解決フロー", () => {
 
     expect(screen.getByRole("heading", { name: "ラウンドの結末" })).toBeVisible();
     expect(screen.getByText("優斗の勝利")).toBeVisible();
+    expect(screen.getByText("夜会の主 / 位階 8")).toBeVisible();
+    expect(
+      screen.getByText("山札が尽き、最も位階の高い協力者が選ばれました。"),
+    ).toBeVisible();
     expect(screen.getByRole("button", { name: "新しい夜会を準備する" })).toBeVisible();
   });
 

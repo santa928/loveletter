@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { beginTurn, resolvePlay, type PlayChoice } from "../game/rules";
 import { applyRoundResult, settleRound } from "../game/scoring";
-import { selectPrivateView, selectPublicView } from "../game/selectors";
+import {
+  selectPrivateView,
+  selectPublicView,
+  selectResultView,
+} from "../game/selectors";
 import { startRound } from "../game/setup";
 import { clearSession, loadSession, saveSession } from "../game/storage";
 import type { GameState, SetupConfig } from "../game/types";
@@ -10,6 +14,7 @@ export interface GameSessionController {
   state: GameState | null;
   publicView: ReturnType<typeof selectPublicView> | null;
   privateView: ReturnType<typeof selectPrivateView> | null;
+  resultView: ReturnType<typeof selectResultView> | null;
   start(config: SetupConfig): void;
   openHandoff(): void;
   drawCard(): void;
@@ -216,6 +221,10 @@ export function useGameSession(
     privateView:
       state?.phase === "turn" || state?.phase === "private-reveal"
         ? selectPrivateView(state, state.activePlayerId)
+        : null,
+    resultView:
+      state?.phase === "round-result" || state?.phase === "match-result"
+        ? selectResultView(state)
         : null,
     start,
     openHandoff,

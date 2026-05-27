@@ -147,7 +147,7 @@ export default function App({ initialState, random }: AppProps = {}) {
   if (
     (session.state.phase === "round-result" ||
       session.state.phase === "match-result") &&
-    session.publicView.roundOutcome
+    session.resultView
   ) {
     return (
       <AppSurface muted={audio.muted} onToggleSound={audio.toggleMuted}>
@@ -163,9 +163,9 @@ export default function App({ initialState, random }: AppProps = {}) {
             session.reset();
             setEntryScreen("setup");
           }}
-          outcome={session.publicView.roundOutcome}
+          outcome={session.resultView.roundOutcome}
           phase={session.state.phase}
-          players={session.publicView.players}
+          players={session.resultView.players}
         />
       </AppSurface>
     );
