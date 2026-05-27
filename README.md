@@ -44,6 +44,16 @@ docker compose run --rm app npm run test:e2e
 
 `build:pages` は GitHub Pages 用にベースパスを `/loveletter/` として静的 bundle を生成します。
 
+## GitHub Pages 公開準備
+
+`.github/workflows/pages.yml` は、GitHub Actions から手動で起動する Pages 公開 workflow です。公開実行前に、次を満たしてください。
+
+1. GitHub 側でリポジトリ名を `loveletter` とし、Pages の Source を `GitHub Actions` に設定します。
+2. 設計用の参考画像など、配信不要の素材が `public/` から分離済みであることを確認します。
+3. Actions の `GitHub Pages 公開` workflow を手動実行します。
+
+リポジトリ名を変更する場合は、公開 URL のサブパスに合わせて `build:pages` の `SITE_BASE_PATH` も更新してください。
+
 ## 公開方針
 
 - 公開タイトルは `Midnight Masquerade: 密書の夜会` とし、参照元作品のブランド表示は用いません。
