@@ -58,13 +58,11 @@ export default function App({ initialState, random }: AppProps = {}) {
     return (
       <TurnScreen
         assetBase={assetBase}
-        activePlayerId={activePlayer.id}
-        deckCount={session.publicView.deckCount}
         hand={session.privateView?.hand ?? []}
         onDraw={session.drawCard}
         onPlay={session.playCard}
         playerName={activePlayer.name}
-        players={session.publicView.players}
+        publicView={session.publicView}
       />
     );
   }

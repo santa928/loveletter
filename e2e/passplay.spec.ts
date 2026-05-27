@@ -69,6 +69,28 @@ for (const viewport of mobileViewports) {
     expect(cardBounds.rightMargin).toBeGreaterThanOrEqual(20);
     expect(cardBounds.overflowsHorizontally).toBe(false);
 
+    await expect(page.locator(".public-ledger")).toBeVisible();
+    await page.getByText("公開された記録", { exact: true }).click();
+    const ledgerBounds = await page.evaluate(() => {
+      const drawer = document.querySelector(".public-ledger__drawer");
+      const bounds = drawer?.getBoundingClientRect();
+
+      return {
+        leftMargin: bounds?.left ?? -1,
+        rightMargin: bounds ? window.innerWidth - bounds.right : -1,
+        overflowsHorizontally:
+          document.documentElement.scrollWidth > window.innerWidth,
+      };
+    });
+    expect(ledgerBounds.leftMargin).toBeGreaterThanOrEqual(20);
+    expect(ledgerBounds.rightMargin).toBeGreaterThanOrEqual(20);
+    expect(ledgerBounds.overflowsHorizontally).toBe(false);
+    await page.screenshot({
+      fullPage: true,
+      path: `test-results/public-ledger-open-${viewport.width}x${viewport.height}.png`,
+    });
+    await page.getByText("公開された記録", { exact: true }).click();
+
     await page.getByRole("button", { name: "密書を一枚引く" }).click();
 
     await expect(page.locator(".role-card--choice")).toHaveCount(2);

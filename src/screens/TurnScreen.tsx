@@ -1,16 +1,15 @@
 import { useState } from "react";
 import type { PlayChoice } from "../game/rules";
-import type { PublicPlayerView } from "../game/selectors";
+import type { PublicGameView } from "../game/selectors";
 import type { Card, Rank } from "../game/types";
+import { PublicLedger } from "./PublicLedger";
 import { RoleCard } from "./RoleCard";
 
 interface TurnScreenProps {
   assetBase: string;
-  activePlayerId: string;
-  deckCount: number;
   hand: Card[];
   playerName: string;
-  players: PublicPlayerView[];
+  publicView: PublicGameView;
   onDraw(): void;
   onPlay(choice: PlayChoice): void;
 }
@@ -37,18 +36,16 @@ function needsTarget(rank: Rank): boolean {
  */
 function canTargetSelf(rank: Rank): boolean {
   return rank === 5;
-};
+}
 
 /**
  * Lets the current viewer draw and deliberately resolve one private role card.
  */
 export function TurnScreen({
   assetBase,
-  activePlayerId,
-  deckCount,
   hand,
   playerName,
-  players,
+  publicView,
   onDraw,
   onPlay,
 }: TurnScreenProps) {
@@ -56,10 +53,11 @@ export function TurnScreen({
   const [selectedTargetId, setSelectedTargetId] = useState<string | null>(null);
   const selectedCard = hand.find((card) => card.id === selectedCardId) ?? null;
   const selectableTargets = selectedCard
-    ? players.filter(
+    ? publicView.players.filter(
         (player) =>
           !player.eliminated &&
-          (canTargetSelf(selectedCard.rank) || player.id !== activePlayerId),
+          (canTargetSelf(selectedCard.rank) ||
+            player.id !== publicView.activePlayerId),
       )
     : [];
 
@@ -99,6 +97,7 @@ export function TurnScreen({
         <h1>{`${playerName}さんの密書`}</h1>
         <p className="turn-screen__privacy">この画面は本人だけが確認してください</p>
       </header>
+      <PublicLedger resolving={hand.length === 2} view={publicView} />
       <section className="private-hand" aria-label="あなたの手札">
         <h2>あなたの手札</h2>
         {hand.map((card) => (
@@ -111,7 +110,7 @@ export function TurnScreen({
             onAction={hand.length === 2 ? () => chooseCard(card) : undefined}
           />
         ))}
-        {hand.length === 1 && deckCount > 0 ? (
+        {hand.length === 1 && publicView.deckCount > 0 ? (
           <button className="seal-button draw-button" onClick={onDraw} type="button">
             密書を一枚引く
           </button>
@@ -128,7 +127,7 @@ export function TurnScreen({
                 onClick={() => chooseTarget(player.id)}
                 type="button"
               >
-                {`${player.name}${player.id === activePlayerId ? "（本人）" : ""}を対象にする`}
+                {`${player.name}${player.id === publicView.activePlayerId ? "（本人）" : ""}を対象にする`}
               </button>
             ))}
           </div>

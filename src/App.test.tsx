@@ -55,6 +55,22 @@ describe("一台受け渡しの開始フロー", () => {
 });
 
 describe("本人だけが進める手番解決フロー", () => {
+  it("公開状況では使用済み密書を確認できるが相手の保持札は漏らさない", () => {
+    const state = ruleState({
+      actorHand: [fixtureCard(3, "kept")],
+      targetHand: [fixtureCard(8, "target-host")],
+      deck: [fixtureCard(2, "drawn-informant")],
+    });
+    state.players[1].discards.push(fixtureCard(1, "public-gatekeeper"));
+
+    render(<App initialState={state} />);
+
+    expect(screen.getByLabelText("山札 1枚")).toBeVisible();
+    fireEvent.click(screen.getByText("公開された記録"));
+    expect(screen.getByText("門番")).toBeVisible();
+    expect(screen.queryByText("夜会の主")).not.toBeInTheDocument();
+  });
+
   it("情報屋で確認した密書は閉じるまで次の招待客へ見せない", () => {
     const state = ruleState({
       actorHand: [fixtureCard(3, "kept")],
