@@ -136,3 +136,252 @@
     transition: none;
   }
 }
+
+.scene-backdrop,
+.scene-veil {
+  height: 100%;
+  inset: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.scene-backdrop {
+  object-fit: cover;
+  object-position: center top;
+}
+
+.scene-veil {
+  background:
+    linear-gradient(180deg, rgba(12, 5, 9, 0.54), rgba(12, 5, 9, 0.93)),
+    radial-gradient(circle at 50% 14%, transparent, rgba(9, 3, 6, 0.62) 58%);
+}
+
+.eyebrow {
+  color: var(--gold-400);
+  font-size: 0.68rem;
+  letter-spacing: 0.38em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.setup-screen {
+  align-items: center;
+  background: var(--velvet-950);
+  display: flex;
+  justify-content: center;
+  min-height: 100svh;
+  overflow-x: hidden;
+  padding: max(24px, env(safe-area-inset-top)) var(--safe-inline) var(--safe-bottom);
+  position: relative;
+}
+
+.setup-panel {
+  background:
+    linear-gradient(145deg, rgba(89, 34, 40, 0.57), rgba(24, 10, 15, 0.92)),
+    rgba(18, 7, 12, 0.92);
+  border: 1px solid rgba(232, 200, 135, 0.4);
+  border-radius: 30px;
+  box-shadow: 0 24px 70px rgba(2, 1, 3, 0.58);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 390px;
+  padding: clamp(24px, 7vw, 30px);
+  position: relative;
+  width: 100%;
+}
+
+.setup-panel h1,
+.handoff-panel h1,
+.turn-screen__header h1 {
+  color: var(--ink-cream);
+  font-size: clamp(1.7rem, 7vw, 2.1rem);
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.setup-panel__hint {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  margin: -6px 0 0;
+}
+
+.field {
+  color: var(--gold-200);
+  display: flex;
+  flex-direction: column;
+  font-size: 0.82rem;
+  gap: 7px;
+  letter-spacing: 0.08em;
+}
+
+.field input,
+.field select {
+  appearance: none;
+  background: rgba(11, 4, 8, 0.58);
+  border: 1px solid rgba(245, 221, 167, 0.38);
+  border-radius: 13px;
+  color: var(--ink-cream);
+  min-height: 46px;
+  padding: 0 14px;
+  width: 100%;
+}
+
+.field input::placeholder {
+  color: rgba(228, 211, 182, 0.55);
+}
+
+.field input:focus-visible,
+.field select:focus-visible {
+  border-color: var(--gold-200);
+  outline: 2px solid rgba(245, 221, 167, 0.5);
+  outline-offset: 1px;
+}
+
+.name-list {
+  border: 0;
+  display: grid;
+  gap: 11px;
+  margin: 0;
+  padding: 0;
+}
+
+.name-list legend {
+  color: var(--gold-200);
+  font-size: 0.83rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.name-list small {
+  color: var(--ink-soft);
+  margin-left: 8px;
+}
+
+.setup-panel__submit {
+  margin-top: 7px;
+  width: 100%;
+}
+
+.handoff-screen {
+  align-items: end;
+  background: var(--velvet-950);
+  display: grid;
+  min-height: 100svh;
+  overflow: hidden;
+  padding: var(--safe-bottom) var(--safe-inline);
+  position: relative;
+}
+
+.handoff-screen__glow {
+  background: radial-gradient(circle at 50% 42%, rgba(219, 181, 99, 0.18), transparent 44%);
+  inset: 0;
+  position: absolute;
+}
+
+.handoff-screen__letter {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  object-position: center top;
+  position: absolute;
+  width: 100%;
+}
+
+.handoff-panel {
+  align-items: center;
+  background: linear-gradient(180deg, transparent, rgba(18, 7, 12, 0.95) 24%);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 0 calc(-1 * var(--safe-inline)) calc(-1 * var(--safe-bottom));
+  padding: 76px var(--safe-inline) calc(var(--safe-bottom) + 16px);
+  position: relative;
+  text-align: center;
+}
+
+.handoff-panel p:not(.eyebrow) {
+  color: var(--ink-soft);
+  line-height: 1.65;
+  margin: 0 0 10px;
+  max-width: 320px;
+}
+
+.turn-screen {
+  background:
+    radial-gradient(circle at 50% 0, rgba(110, 45, 50, 0.46), transparent 42%),
+    var(--velvet-950);
+  min-height: 100svh;
+  padding: max(38px, env(safe-area-inset-top)) var(--safe-inline) var(--safe-bottom);
+}
+
+.turn-screen__header {
+  margin: 0 auto 28px;
+  max-width: 390px;
+  text-align: center;
+}
+
+.turn-screen__privacy {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  margin: 14px 0 0;
+}
+
+.private-hand {
+  margin: 0 auto;
+  max-width: 390px;
+}
+
+.private-hand h2 {
+  color: var(--gold-200);
+  font-size: 0.94rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.role-card {
+  background: linear-gradient(160deg, #f5e6c7, #d7b878);
+  border: 2px solid var(--gold-400);
+  border-radius: 23px;
+  box-shadow: 0 18px 46px rgba(3, 1, 3, 0.48);
+  color: #301418;
+  overflow: hidden;
+}
+
+.role-card img {
+  aspect-ratio: 4 / 3;
+  display: block;
+  object-fit: cover;
+  object-position: center 22%;
+  width: 100%;
+}
+
+.role-card__copy {
+  padding: 15px 18px 19px;
+}
+
+.role-card__rank {
+  color: #75501e;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  margin: 0 0 7px;
+}
+
+.role-card__copy h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  margin: 0 0 9px;
+}
+
+.role-card__copy p:last-child {
+  font-size: 0.88rem;
+  line-height: 1.58;
+  margin: 0;
+}
