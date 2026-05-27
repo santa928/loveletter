@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+test-results/
+playwright-report/
+.vite/
+.DS_Store
+progress.md
+docs/superpowers/
+public/assets/art/**/*.png
+public/assets/art/*.png

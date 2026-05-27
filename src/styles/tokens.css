@@ -1,0 +1,37 @@
+:root {
+  color: #fff5df;
+  background: #12070c;
+  font-family: "Baskerville", "Iowan Old Style", "Times New Roman", serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --velvet-950: #12070c;
+  --velvet-900: #1d0a12;
+  --velvet-700: #4f1825;
+  --gold-200: #f5dda7;
+  --gold-400: #dbb563;
+  --gold-600: #a66f26;
+  --ink-cream: #fff5df;
+  --ink-soft: #e4d3b6;
+  --shadow-deep: rgba(5, 2, 4, 0.72);
+  --safe-inline: clamp(20px, 7vw, 30px);
+  --safe-bottom: max(24px, env(safe-area-inset-bottom));
+  --tap-min: 52px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+button {
+  font: inherit;
+}
