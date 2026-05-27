@@ -70,6 +70,18 @@ describe("公式準拠の役職効果", () => {
     expect(next.players[1].eliminated).toBe(true);
   });
 
+  it("決闘士で位階が同じなら誰も退出しない", () => {
+    const next = resolvePlay(
+      ruleState({
+        actorHand: [fixtureCard(6, "kept"), fixtureCard(3, "played")],
+        targetHand: [fixtureCard(6, "target")],
+      }),
+      { cardId: "played", targetId: "p2" },
+    );
+
+    expect(next.players.every((player) => !player.eliminated)).toBe(true);
+  });
+
   it("仮面の侍女で保護された対象は選べるが効果が無効になる", () => {
     const next = resolvePlay(
       ruleState({
@@ -97,6 +109,19 @@ describe("公式準拠の役職効果", () => {
     expect(next.players[0].protected).toBe(true);
   });
 
+  it("仮面の侍女の庇護は本人が次に引く前に解除される", () => {
+    const state = ruleState({
+      actorHand: [fixtureCard(3, "kept")],
+      targetHand: [fixtureCard(8, "target-host")],
+      deck: [fixtureCard(1, "drawn")],
+    });
+    state.players[0].protected = true;
+
+    const next = beginTurn(state);
+
+    expect(next.players[0].protected).toBe(false);
+  });
+
   it("演出家の補充時に山札が空なら伏せ除外札を渡す", () => {
     const next = resolvePlay(
       ruleState({
@@ -108,6 +133,20 @@ describe("公式準拠の役職効果", () => {
 
     expect(next.players[1].hand[0].id).toBe("hidden-removed");
     expect(next.hiddenRemoved).toBeNull();
+  });
+
+  it("演出家は自分を対象にでき、山札があれば伏せ札より先に引く", () => {
+    const next = resolvePlay(
+      ruleState({
+        actorHand: [fixtureCard(2, "kept"), fixtureCard(5, "played")],
+        targetHand: [fixtureCard(3, "target")],
+        deck: [fixtureCard(4, "replacement")],
+      }),
+      { cardId: "played", targetId: "p1" },
+    );
+
+    expect(next.players[0].hand[0].id).toBe("replacement");
+    expect(next.hiddenRemoved?.id).toBe("hidden-removed");
   });
 
   it("演出家で夜会の主を手放した対象は退出する", () => {
