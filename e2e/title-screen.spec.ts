@@ -53,6 +53,28 @@ for (const viewport of mobileViewports) {
     });
     expect(soundBounds.rightMargin).toBeGreaterThanOrEqual(10);
     expect(soundBounds.topMargin).toBeGreaterThanOrEqual(10);
+    await page.getByRole("button", { name: "遊び方を見る" }).click();
+    await expect(page.getByRole("region", { name: "遊び方" })).toBeVisible();
+    await expect(page.getByText("2〜4人で1台の端末を順に渡し")).toBeVisible();
+    const howToBounds = await page.evaluate(() => {
+      const panel = document.querySelector(".home-guide");
+      const bounds = panel?.getBoundingClientRect();
+
+      return {
+        leftMargin: bounds?.left ?? -1,
+        rightMargin: bounds ? window.innerWidth - bounds.right : -1,
+        overflowsHorizontally:
+          document.documentElement.scrollWidth > window.innerWidth,
+      };
+    });
+    expect(howToBounds.leftMargin).toBeGreaterThanOrEqual(14);
+    expect(howToBounds.rightMargin).toBeGreaterThanOrEqual(14);
+    expect(howToBounds.overflowsHorizontally).toBe(false);
+    await page.getByRole("button", { name: "案内を閉じる" }).click();
+
+    await page.getByRole("button", { name: "チュートリアル" }).click();
+    await expect(page.getByRole("region", { name: "チュートリアル" })).toBeVisible();
+    await expect(page.getByText("カードの効果説明を読み")).toBeVisible();
     expect(consoleProblems).toEqual([]);
     await page.screenshot({
       fullPage: true,

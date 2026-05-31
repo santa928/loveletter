@@ -39,7 +39,10 @@ export function RoleCard({
       <div className="role-card__copy">
         <p className="role-card__rank">{`位階 ${card.rank}`}</p>
         <h3>{card.name}</h3>
-        <p className="role-card__summary">{card.summary}</p>
+        <p className="role-card__summary">
+          <span>効果</span>
+          {card.summary}
+        </p>
         {actionLabel && onAction ? (
           <button className="role-card__action" onClick={onAction} type="button">
             {actionLabel}

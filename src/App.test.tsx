@@ -20,6 +20,23 @@ describe("タイトル画面", () => {
     expect(screen.getByRole("button", { name: "夜会へ入る" })).toBeVisible();
   });
 
+  it("ホームから遊び方とチュートリアルを確認できる", () => {
+    render(<App random={() => 0} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "遊び方を見る" }));
+    expect(screen.getByRole("region", { name: "遊び方" })).toBeVisible();
+    expect(
+      screen.getByText("2〜4人で1台の端末を順に渡し、最後まで密書を守る人を探ります。"),
+    ).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "案内を閉じる" }));
+
+    fireEvent.click(screen.getByRole("button", { name: "チュートリアル" }));
+    expect(screen.getByRole("region", { name: "チュートリアル" })).toBeVisible();
+    expect(
+      screen.getByText("3. カードの効果説明を読み、対象が必要なら画面の候補から選びます。"),
+    ).toBeVisible();
+  });
+
   it("効果音のミュート設定を端末へ保存する", () => {
     render(<App random={() => 0} />);
 
@@ -105,6 +122,22 @@ describe("本人だけが進める手番解決フロー", () => {
       screen.getByText("優斗さんへ端末を渡してください"),
     ).toBeVisible();
     expect(screen.queryByText("夜会の主")).not.toBeInTheDocument();
+  });
+
+  it("二枚から選ぶ手札にも効果説明を表示する", () => {
+    const state = ruleState({
+      actorHand: [fixtureCard(3, "kept")],
+      targetHand: [fixtureCard(8, "target-host")],
+      deck: [fixtureCard(6, "drawn-merchant"), fixtureCard(4, "reserve")],
+    });
+
+    render(<App initialState={state} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "密書を一枚引く" }));
+
+    expect(screen.getByText("相手と位階を比べ、低い側を退出させる。")).toBeVisible();
+    expect(screen.getByText("相手と協力者を密かに交換する。")).toBeVisible();
+    expect(screen.getAllByText("効果")).toHaveLength(2);
   });
 
   it("演出家で本人が引き直した密書は確認してから受け渡す", () => {

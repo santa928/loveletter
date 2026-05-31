@@ -106,11 +106,17 @@ for (const viewport of mobileViewports) {
     await page.getByRole("button", { name: "密書を一枚引く" }).click();
 
     await expect(page.locator(".role-card--choice")).toHaveCount(2);
+    await expect(page.getByText("効果")).toHaveCount(2);
+    await expect(page.getByText("相手と位階を比べ、低い側を退出させる。")).toBeVisible();
+    await expect(page.getByText("相手の協力者を自分だけが確認する。")).toBeVisible();
     const playChoiceBounds = await page.evaluate(() =>
       Array.from(document.querySelectorAll(".role-card--choice")).map((card) => {
         const cardBounds = card.getBoundingClientRect();
         const actionBounds = card
           .querySelector("button")
+          ?.getBoundingClientRect();
+        const summaryBounds = card
+          .querySelector(".role-card__summary")
           ?.getBoundingClientRect();
 
         return {
@@ -118,6 +124,10 @@ for (const viewport of mobileViewports) {
             Boolean(actionBounds) &&
             actionBounds!.bottom <= cardBounds.bottom &&
             actionBounds!.right <= cardBounds.right,
+          summaryContained:
+            Boolean(summaryBounds) &&
+            summaryBounds!.bottom <= cardBounds.bottom &&
+            summaryBounds!.right <= cardBounds.right,
           cardRightMargin: window.innerWidth - cardBounds.right,
           overflowsHorizontally:
             document.documentElement.scrollWidth > window.innerWidth,
@@ -126,12 +136,17 @@ for (const viewport of mobileViewports) {
     );
     expect(playChoiceBounds).toHaveLength(2);
     expect(playChoiceBounds.every((bounds) => bounds.actionContained)).toBe(true);
+    expect(playChoiceBounds.every((bounds) => bounds.summaryContained)).toBe(true);
     expect(
       playChoiceBounds.every((bounds) => bounds.cardRightMargin >= 20),
     ).toBe(true);
     expect(
       playChoiceBounds.every((bounds) => !bounds.overflowsHorizontally),
     ).toBe(true);
+    await page.screenshot({
+      fullPage: true,
+      path: `test-results/choice-effects-${viewport.width}x${viewport.height}.png`,
+    });
     expect(consoleProblems).toEqual([]);
   });
 }
