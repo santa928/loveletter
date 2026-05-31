@@ -37,6 +37,12 @@ describe("タイトル画面", () => {
     expect(
       screen.getByText("3. カードの効果説明を読み、対象が必要なら画面の候補から選びます。"),
     ).toBeVisible();
+
+    fireEvent.click(screen.getByRole("button", { name: "カード一覧" }));
+    expect(screen.getByRole("region", { name: "カード一覧" })).toBeVisible();
+    expect(screen.getByText("門番")).toBeVisible();
+    expect(screen.getByText("夜会の主")).toBeVisible();
+    expect(screen.getByText("5枚")).toBeVisible();
   });
 
   it("効果音のミュート設定を端末へ保存する", () => {

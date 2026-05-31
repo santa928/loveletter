@@ -76,6 +76,24 @@ for (const viewport of mobileViewports) {
     await page.getByRole("button", { name: "チュートリアル" }).click();
     await expect(page.getByRole("region", { name: "チュートリアル" })).toBeVisible();
     await expect(page.getByText("カードの効果説明を読み")).toBeVisible();
+    await page.getByRole("button", { name: "カード一覧" }).click();
+    await expect(page.getByRole("region", { name: "カード一覧" })).toBeVisible();
+    await expect(page.getByText("門番")).toBeVisible();
+    await expect(page.getByText("夜会の主")).toBeVisible();
+    const catalogBounds = await page.evaluate(() => {
+      const catalog = document.querySelector(".card-catalog");
+      const bounds = catalog?.getBoundingClientRect();
+
+      return {
+        leftMargin: bounds?.left ?? -1,
+        rightMargin: bounds ? window.innerWidth - bounds.right : -1,
+        overflowsHorizontally:
+          document.documentElement.scrollWidth > window.innerWidth,
+      };
+    });
+    expect(catalogBounds.leftMargin).toBeGreaterThanOrEqual(14);
+    expect(catalogBounds.rightMargin).toBeGreaterThanOrEqual(14);
+    expect(catalogBounds.overflowsHorizontally).toBe(false);
     expect(consoleProblems).toEqual([]);
     await page.screenshot({
       fullPage: true,

@@ -1,17 +1,39 @@
 import { useState } from "react";
+import { createDeck } from "../game/cards";
+import type { Card } from "../game/types";
 
 interface TitleScreenProps {
   assetBase: string;
   onEnter(): void;
 }
 
-type HomeGuide = "how-to" | "tutorial";
+type HomeGuide = "how-to" | "tutorial" | "cards";
+
+interface CardCatalogItem {
+  card: Card;
+  count: number;
+}
 
 const glossary = [
   ["密書", "このゲームで使うカードのこと"],
   ["協力者", "手札カードに描かれた人物のこと"],
   ["招待客", "いま遊んでいるプレイヤーのこと"],
 ] as const;
+
+const cardCatalog: readonly CardCatalogItem[] = Array.from(
+  createDeck()
+    .reduce((catalog, card) => {
+      const current = catalog.get(card.rank);
+
+      catalog.set(card.rank, {
+        card: current?.card ?? card,
+        count: (current?.count ?? 0) + 1,
+      });
+
+      return catalog;
+    }, new Map<Card["rank"], CardCatalogItem>())
+    .values(),
+).sort((left, right) => left.card.rank - right.card.rank);
 
 const guideContent: Record<
   HomeGuide,
@@ -41,6 +63,11 @@ const guideContent: Record<
       "4. 秘密確認が出たら本人だけが読み、閉じてから次の人へ渡します。",
     ],
   },
+  cards: {
+    title: "カード一覧",
+    lead: "位階が高いほどラウンド終盤で強くなります。まずは低いカードほど効果で相手を動かす、と覚えてください。",
+    items: [],
+  },
 };
 
 /**
@@ -67,6 +94,20 @@ function HomeGuidePanel({
           <li key={item}>{item}</li>
         ))}
       </ol>
+      {guide === "cards" ? (
+        <ol className="card-catalog" aria-label="カード一覧">
+          {cardCatalog.map(({ card, count }) => (
+            <li key={card.rank}>
+              <div>
+                <span>{`位階 ${card.rank}`}</span>
+                <strong>{card.name}</strong>
+                <em>{`${count}枚`}</em>
+              </div>
+              <p>{card.summary}</p>
+            </li>
+          ))}
+        </ol>
+      ) : null}
       <dl className="home-guide__glossary" aria-label="ことばの早見表">
         {glossary.map(([term, description]) => (
           <div key={term}>
@@ -112,6 +153,9 @@ export function TitleScreen({ assetBase, onEnter }: TitleScreenProps) {
           </button>
           <button onClick={() => setOpenGuide("tutorial")} type="button">
             チュートリアル
+          </button>
+          <button onClick={() => setOpenGuide("cards")} type="button">
+            カード一覧
           </button>
         </div>
         {openGuide ? (

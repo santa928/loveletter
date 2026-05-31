@@ -124,6 +124,10 @@
   outline-offset: 3px;
 }
 
+.invitation__guides button:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
 .home-guide {
   background:
     linear-gradient(180deg, rgba(37, 13, 22, 0.94), rgba(18, 7, 12, 0.96)),
@@ -177,6 +181,52 @@
   font-size: 0.78rem;
   line-height: 1.52;
   padding-left: 10px;
+}
+
+.card-catalog {
+  display: grid;
+  gap: 9px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.card-catalog li {
+  background: rgba(255, 236, 191, 0.055);
+  border: 1px solid rgba(232, 200, 135, 0.22);
+  border-radius: 14px;
+  display: grid;
+  gap: 5px;
+  padding: 10px 12px;
+}
+
+.card-catalog li div {
+  align-items: baseline;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: auto 1fr auto;
+}
+
+.card-catalog span,
+.card-catalog em {
+  color: var(--gold-200);
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.card-catalog strong {
+  color: var(--ink-cream);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.card-catalog p {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  line-height: 1.45;
 }
 
 .home-guide__glossary {
