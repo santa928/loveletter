@@ -5,6 +5,9 @@ test-results/
 playwright-report/
 .vite/
 .DS_Store
+.env
+.env.*
+!.env.sample
 progress.md
 docs/superpowers/
 public/assets/art/**/*.png

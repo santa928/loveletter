@@ -46,6 +46,17 @@ docker compose run --rm app npm run test:e2e
 
 `build:pages` は GitHub Pages 用にベースパスを `/loveletter/` として静的 bundle を生成します。
 
+## Vercel / Supabase オンライン準備
+
+オンライン版は、Vercel の root 配信と Supabase の合言葉ルーム方式で段階的に追加します。
+
+- Vercel は `vercel.json` の `npm run build` / `dist` 出力を使います。
+- Supabase 接続値は `.env.sample` の `VITE_SUPABASE_URL` と `VITE_SUPABASE_ANON_KEY` を使います。
+- 合言葉ルームの設計、RLS 方針、受け入れ条件は `docs/online-supabase-plan.md` にまとめています。
+- 初期 schema と room 作成/参加 RPC は `supabase/migrations/202606010001_online_rooms.sql` にあります。
+
+実 Supabase project では Anonymous Auth を有効化し、migration 適用後に online client 実装へ進みます。`service_role` key はブラウザや Vercel の client env に置きません。
+
 ## GitHub Pages 公開準備
 
 `.github/workflows/pages.yml` は、GitHub Actions から手動で起動する Pages 公開 workflow です。公開実行前に、次を満たしてください。
