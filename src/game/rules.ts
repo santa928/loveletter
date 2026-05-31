@@ -133,7 +133,7 @@ export function beginTurn(state: GameState): GameState {
       actor,
       actor.id,
       7,
-      `${actor.name}は密書を封印され、夜会から退出した。`,
+      `${actor.name}は強いカードを抱えきれず、退出した。`,
     );
   }
 
@@ -274,7 +274,7 @@ export function resolvePlay(state: GameState, choice: PlayChoice): GameState {
         card: receivedCard,
         reason: "exchange",
       };
-      appendLog(next, actor.id, playedCard.rank, "交換商が密書の預け先を入れ替えた。");
+      appendLog(next, actor.id, playedCard.rank, "交換商が二人の手札を入れ替えた。");
       return next;
     }
     case 7:

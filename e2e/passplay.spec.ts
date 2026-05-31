@@ -6,7 +6,7 @@ const mobileViewports = [
 ] as const;
 
 for (const viewport of mobileViewports) {
-  test(`手渡しロックから本人だけが密書を開く (${viewport.width}x${viewport.height})`, async ({
+  test(`手渡しロックから本人だけがカードを確認する (${viewport.width}x${viewport.height})`, async ({
     page,
   }) => {
     const consoleProblems: string[] = [];
@@ -56,7 +56,7 @@ for (const viewport of mobileViewports) {
       path: `test-results/handoff-with-sound-${viewport.width}x${viewport.height}.png`,
     });
 
-    await page.getByRole("button", { name: "密書を開封する" }).click();
+    await page.getByRole("button", { name: "カードを確認する" }).click();
 
     await expect(page.getByText("あなたの手札")).toBeVisible();
     const roleImage = page.locator(".role-card img");
@@ -103,12 +103,12 @@ for (const viewport of mobileViewports) {
     });
     await page.getByText("公開された記録", { exact: true }).click();
 
-    await page.getByRole("button", { name: "密書を一枚引く" }).click();
+    await page.getByRole("button", { name: "カードを一枚引く" }).click();
 
     await expect(page.locator(".role-card--choice")).toHaveCount(2);
     await expect(page.getByText("効果")).toHaveCount(2);
     await expect(page.getByText("相手と位階を比べ、低い側を退出させる。")).toBeVisible();
-    await expect(page.getByText("相手の協力者を自分だけが確認する。")).toBeVisible();
+    await expect(page.getByText("相手の手札カードを自分だけが確認する。")).toBeVisible();
     const playChoiceBounds = await page.evaluate(() =>
       Array.from(document.querySelectorAll(".role-card--choice")).map((card) => {
         const cardBounds = card.getBoundingClientRect();

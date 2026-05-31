@@ -56,6 +56,7 @@ for (const viewport of mobileViewports) {
     await page.getByRole("button", { name: "遊び方を見る" }).click();
     await expect(page.getByRole("region", { name: "遊び方" })).toBeVisible();
     await expect(page.getByText("2〜4人で1台の端末を順に渡し")).toBeVisible();
+    await expect(page.getByText("このゲームで使うカードのこと")).toBeVisible();
     const howToBounds = await page.evaluate(() => {
       const panel = document.querySelector(".home-guide");
       const bounds = panel?.getBoundingClientRect();

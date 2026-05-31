@@ -26,8 +26,10 @@ describe("タイトル画面", () => {
     fireEvent.click(screen.getByRole("button", { name: "遊び方を見る" }));
     expect(screen.getByRole("region", { name: "遊び方" })).toBeVisible();
     expect(
-      screen.getByText("2〜4人で1台の端末を順に渡し、最後まで密書を守る人を探ります。"),
+      screen.getByText("2〜4人で1台の端末を順に渡し、最後まで自分のカードを守る人を探ります。"),
     ).toBeVisible();
+    expect(screen.getByText("密書")).toBeVisible();
+    expect(screen.getByText("このゲームで使うカードのこと")).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "案内を閉じる" }));
 
     fireEvent.click(screen.getByRole("button", { name: "チュートリアル" }));
@@ -62,9 +64,9 @@ describe("一台受け渡しの開始フロー", () => {
     expect(screen.getByText("葵さんへ端末を渡してください")).toBeVisible();
     expect(screen.queryByText("あなたの手札")).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "密書を開封する" }));
+    fireEvent.click(screen.getByRole("button", { name: "カードを確認する" }));
 
-    expect(screen.getByRole("heading", { name: "葵さんの密書" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "葵さんの手札" })).toBeVisible();
     expect(screen.getByText("あなたの手札")).toBeVisible();
   });
 
@@ -81,7 +83,7 @@ describe("一台受け渡しの開始フロー", () => {
 });
 
 describe("本人だけが進める手番解決フロー", () => {
-  it("公開状況では使用済み密書を確認できるが相手の保持札は漏らさない", () => {
+  it("公開状況では使用済みカードを確認できるが相手の保持札は漏らさない", () => {
     const state = ruleState({
       actorHand: [fixtureCard(3, "kept")],
       targetHand: [fixtureCard(8, "target-host")],
@@ -106,7 +108,7 @@ describe("本人だけが進める手番解決フロー", () => {
 
     render(<App initialState={state} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "密書を一枚引く" }));
+    fireEvent.click(screen.getByRole("button", { name: "カードを一枚引く" }));
     fireEvent.click(screen.getByRole("button", { name: "情報屋を使用する" }));
     fireEvent.click(screen.getByRole("button", { name: "優斗を対象にする" }));
 
@@ -133,14 +135,14 @@ describe("本人だけが進める手番解決フロー", () => {
 
     render(<App initialState={state} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "密書を一枚引く" }));
+    fireEvent.click(screen.getByRole("button", { name: "カードを一枚引く" }));
 
     expect(screen.getByText("相手と位階を比べ、低い側を退出させる。")).toBeVisible();
-    expect(screen.getByText("相手と協力者を密かに交換する。")).toBeVisible();
+    expect(screen.getByText("相手と手札カードを密かに交換する。")).toBeVisible();
     expect(screen.getAllByText("効果")).toHaveLength(2);
   });
 
-  it("演出家で本人が引き直した密書は確認してから受け渡す", () => {
+  it("演出家で本人が引き直したカードは確認してから受け渡す", () => {
     const state = ruleState({
       actorHand: [fixtureCard(2, "kept")],
       targetHand: [fixtureCard(3, "target")],
@@ -153,11 +155,11 @@ describe("本人だけが進める手番解決フロー", () => {
 
     render(<App initialState={state} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "密書を一枚引く" }));
+    fireEvent.click(screen.getByRole("button", { name: "カードを一枚引く" }));
     fireEvent.click(screen.getByRole("button", { name: "演出家を使用する" }));
     fireEvent.click(screen.getByRole("button", { name: "葵（本人）を対象にする" }));
 
-    expect(screen.getByRole("heading", { name: "引き直した密書" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "引き直したカード" })).toBeVisible();
     expect(screen.getByText("仮面の侍女")).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "確認して閉じる" }));
     expect(
@@ -174,7 +176,7 @@ describe("本人だけが進める手番解決フロー", () => {
 
     render(<App initialState={state} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "密書を一枚引く" }));
+    fireEvent.click(screen.getByRole("button", { name: "カードを一枚引く" }));
     fireEvent.click(
       screen.getByRole("button", { name: "仮面の侍女を使用する" }),
     );
@@ -183,7 +185,7 @@ describe("本人だけが進める手番解決フロー", () => {
     expect(screen.getByText("優斗の勝利")).toBeVisible();
     expect(screen.getByText("夜会の主 / 位階 8")).toBeVisible();
     expect(
-      screen.getByText("山札が尽き、最も位階の高い協力者が選ばれました。"),
+      screen.getByText("山札が尽き、最も位階の高い手札カードが勝利しました。"),
     ).toBeVisible();
     expect(screen.getByRole("button", { name: "新しい夜会を準備する" })).toBeVisible();
   });
@@ -198,14 +200,14 @@ describe("本人だけが進める手番解決フロー", () => {
 
     render(<App initialState={state} random={() => 0} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "密書を一枚引く" }));
+    fireEvent.click(screen.getByRole("button", { name: "カードを一枚引く" }));
     fireEvent.click(
       screen.getByRole("button", { name: "仮面の侍女を使用する" }),
     );
 
     expect(screen.getByRole("heading", { name: "ラウンドの結末" })).toBeVisible();
     expect(screen.getByText("2 点")).toBeVisible();
-    fireEvent.click(screen.getByRole("button", { name: "次の密書を配る" }));
+    fireEvent.click(screen.getByRole("button", { name: "次のカードを配る" }));
 
     expect(screen.getByText("優斗さんへ端末を渡してください")).toBeVisible();
   });
@@ -221,7 +223,7 @@ describe("本人だけが進める手番解決フロー", () => {
 
     render(<App initialState={state} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "密書を一枚引く" }));
+    fireEvent.click(screen.getByRole("button", { name: "カードを一枚引く" }));
     fireEvent.click(
       screen.getByRole("button", { name: "仮面の侍女を使用する" }),
     );
@@ -245,7 +247,7 @@ describe("保存された夜会の安全な再開", () => {
 
     expect(screen.getByText("葵さんへ端末を渡してください")).toBeVisible();
     expect(screen.queryByText("あなたの手札")).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "密書を開封する" }));
+    fireEvent.click(screen.getByRole("button", { name: "カードを確認する" }));
     expect(screen.getByText("あなたの手札")).toBeVisible();
   });
 
@@ -277,7 +279,7 @@ describe("保存された夜会の安全な再開", () => {
 
     expect(screen.getByText("葵さんへ端末を渡してください")).toBeVisible();
     expect(screen.queryByRole("heading", { name: "情報屋の報せ" })).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "密書を開封する" }));
+    fireEvent.click(screen.getByRole("button", { name: "カードを確認する" }));
     expect(screen.getByRole("heading", { name: "情報屋の報せ" })).toBeVisible();
   });
 });

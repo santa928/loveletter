@@ -179,6 +179,34 @@
   padding-left: 10px;
 }
 
+.home-guide__glossary {
+  border-top: 1px solid rgba(232, 200, 135, 0.22);
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-top: 12px;
+}
+
+.home-guide__glossary div {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: 72px 1fr;
+}
+
+.home-guide__glossary dt {
+  color: var(--gold-200);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.home-guide__glossary dd {
+  color: var(--ink-cream);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
 .home-guide__close {
   justify-self: end;
   min-height: 36px;

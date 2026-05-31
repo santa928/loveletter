@@ -94,7 +94,7 @@ export function TurnScreen({
     <main className="turn-screen">
       <header className="turn-screen__header">
         <p className="eyebrow">Private Letter</p>
-        <h1>{`${playerName}さんの密書`}</h1>
+        <h1>{`${playerName}さんの手札`}</h1>
         <p className="turn-screen__privacy">この画面は本人だけが確認してください</p>
       </header>
       <PublicLedger resolving={hand.length === 2} view={publicView} />
@@ -112,7 +112,7 @@ export function TurnScreen({
         ))}
         {hand.length === 1 && publicView.deckCount > 0 ? (
           <button className="seal-button draw-button" onClick={onDraw} type="button">
-            密書を一枚引く
+            カードを一枚引く
           </button>
         ) : null}
       </section>

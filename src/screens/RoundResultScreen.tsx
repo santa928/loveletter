@@ -46,8 +46,8 @@ export function RoundResultScreen({
   const isMatchEnd = phase === "match-result";
   const reason =
     outcome.reason === "last-standing"
-      ? "最後まで密書を守り抜きました。"
-      : "山札が尽き、最も位階の高い協力者が選ばれました。";
+      ? "最後まで自分のカードを守り抜きました。"
+      : "山札が尽き、最も位階の高い手札カードが勝利しました。";
 
   return (
     <main className="result-screen">
@@ -91,7 +91,7 @@ export function RoundResultScreen({
         ) : null}
         {!isMatchEnd && matchMode === "first-to-three" ? (
           <button className="seal-button" onClick={onContinue} type="button">
-            次の密書を配る
+            次のカードを配る
           </button>
         ) : (
           <button className="seal-button" onClick={onReset} type="button">

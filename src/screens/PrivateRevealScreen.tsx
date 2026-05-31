@@ -10,8 +10,8 @@ interface PrivateRevealScreenProps {
 
 const revealTitles: Record<PrivateReveal["reason"], string> = {
   informant: "情報屋の報せ",
-  exchange: "交換後の密書",
-  redraw: "引き直した密書",
+  exchange: "交換後のカード",
+  redraw: "引き直したカード",
 };
 
 /**
@@ -32,7 +32,7 @@ export function PrivateRevealScreen({
           この内容は口に出さず、確認後に画面を閉じてください
         </p>
       </header>
-      <section className="private-hand" aria-label="確認した密書">
+      <section className="private-hand" aria-label="確認したカード">
         <RoleCard assetBase={assetBase} card={card} />
       </section>
       <button className="seal-button reveal-screen__close" onClick={onClose} type="button">

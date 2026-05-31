@@ -25,9 +25,9 @@ export function HandoffScreen({
       <section className="handoff-panel" aria-label="端末の受け渡し">
         <p className="eyebrow">Sealed Letter</p>
         <h1>{`${playerName}さんへ端末を渡してください`}</h1>
-        <p>本人だけが画面を見られる状態で、封印を解いてください。</p>
+        <p>本人だけが画面を見られる状態で、手札カードを確認してください。</p>
         <button className="seal-button" onClick={onOpen} type="button">
-          密書を開封する
+          カードを確認する
         </button>
       </section>
     </main>

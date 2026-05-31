@@ -35,7 +35,7 @@ export function SetupScreen({ assetBase, onStart }: SetupScreenProps) {
         <p className="eyebrow">Invitation List</p>
         <h1>夜会の支度</h1>
         <p className="setup-panel__hint">
-          招待客を登録し、密書を託す一夜を始めます。
+          プレイヤーを登録し、カードを一枚ずつ受け取る一夜を始めます。
         </p>
         <label className="field">
           <span>参加人数</span>
@@ -51,7 +51,7 @@ export function SetupScreen({ assetBase, onStart }: SetupScreenProps) {
           </select>
         </label>
         <fieldset className="name-list">
-          <legend>招待客の名前 <small>任意</small></legend>
+          <legend>プレイヤーの名前 <small>任意</small></legend>
           {Array.from({ length: playerCount }, (_, index) => (
             <label className="field field--compact" key={index}>
               <span>{`プレイヤー${index + 1}の名前`}</span>
